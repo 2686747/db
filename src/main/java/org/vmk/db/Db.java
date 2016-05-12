@@ -36,7 +36,8 @@ public class Db {
 	 *  statements or (2) 0 for SQL statements that return nothing
 	 */
 	public int exec() throws SQLException, IOException {
-		PreparedStatement ps = this.ds.connection().prepareStatement(sql());
+		PreparedStatement ps = this.ds.dataSource()
+			.getConnection().prepareStatement(sql());
 		return ps.executeUpdate();
 	}
 	/**

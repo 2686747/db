@@ -1,8 +1,9 @@
 package org.vmk.db.ds;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
+import javax.sql.DataSource;
+
 public interface Ds {
-	public Connection connection() throws SQLException;
+	public DataSource dataSource() throws SQLException;
 }
