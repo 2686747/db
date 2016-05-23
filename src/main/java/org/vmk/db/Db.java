@@ -2,10 +2,9 @@ package org.vmk.db;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-
 import org.vmk.db.ds.Ds;
 
 /**
@@ -15,19 +14,28 @@ import org.vmk.db.ds.Ds;
  */
 public class Db {
 
-	private final File file;
+	private final ReadedString sql;
 	private final Ds ds;
 	
 	/**
 	 * 
 	 * @param ds
 	 * @param resource
+	 * @throws IOException 
 	 */
-	public Db(final Ds ds, final File resource) {
-		this.ds = ds;
-		this.file = resource;
+	public Db(final Ds ds, final File resource) throws IOException {
+		this(ds, new ReadedString(resource));
 	}
 	
+	public Db(final Ds ds, final InputStream resource) throws IOException {
+	    this(ds, new ReadedString(resource));
+	}
+
+
+    private Db(final Ds ds, final ReadedString sql) {
+	    this.ds = ds;
+	    this.sql = sql;
+	}
 	/**
 	 * Creates/updates tables in database.
 	 * @throws SQLException
@@ -36,16 +44,9 @@ public class Db {
 	 *  statements or (2) 0 for SQL statements that return nothing
 	 */
 	public int exec() throws SQLException, IOException {
-		PreparedStatement ps = this.ds.dataSource()
-			.getConnection().prepareStatement(sql());
+		final PreparedStatement ps = this.ds.dataSource()
+			.getConnection().prepareStatement(this.sql.toString());
 		return ps.executeUpdate();
 	}
-	/**
-	 * Reads sql statements from file
-	 * @return 
-	 * @throws IOException
-	 */
-	private String sql() throws IOException {
-		return new String(Files.readAllBytes(this.file.toPath()));
-	}
+	
 }

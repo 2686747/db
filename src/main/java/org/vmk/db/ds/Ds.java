@@ -5,5 +5,5 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 public interface Ds {
-	public DataSource dataSource() throws SQLException;
+	DataSource dataSource() throws SQLException;
 }
